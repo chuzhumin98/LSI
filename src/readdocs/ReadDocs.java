@@ -6,10 +6,13 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
+import java.util.Map.Entry;
+
 
 import Jama.Matrix;
 import Jama.SingularValueDecomposition;;
@@ -102,10 +105,37 @@ public class ReadDocs {
     
     // 写入映射到文件中，格式：termNum;term;docsNum,docs
     public static void writeMap(String path) { 
-    	
+        try (PrintStream out = new PrintStream(new File(path))) {
+        	out.println(ReadDocs.term_docs.size());
+        	for (Map.Entry<String, ArrayList<Integer>> entry : term_docs.entrySet()) {
+        		out.println(entry.getKey());
+        	}
+        	out.println("");
+        	out.println(ReadDocs.docsNum);
+        	for (int i = 0; i < ReadDocs.fileNames.size(); i++) {
+        		out.println(ReadDocs.fileNames.get(i));
+        	}
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
+    
+    public static void writeMatrix(String path) {
+    	try (PrintStream out = new PrintStream(new File(path))) {
+        	for (Map.Entry<String, ArrayList<Integer>> entry : term_docs.entrySet()) {
+        		ArrayList<Integer> al1 = entry.getValue();
+        		out.println(al1.toString());
+        	}
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
     }
 	public static void main(String[] args) throws IOException {
 		writeMatrix("D:/学习/大三上/信息检索/HW3/PKU_corpus",0);
+		writeMap("ext/map.txt");
+		writeMatrix("ext/matrix.txt");
 		// create M-by-N matrix that doesn't have full rank  
 	    /*  int M = 8, N = 5;  
 	      Matrix B = Matrix.random(5, 3);  
