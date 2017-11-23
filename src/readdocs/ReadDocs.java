@@ -6,6 +6,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
@@ -14,9 +15,11 @@ import Jama.Matrix;
 import Jama.SingularValueDecomposition;;
 
 public class ReadDocs {
+	final static int docsNum = 3148;
     private static int depth=1;  
-    public static Map<String, Integer> term_docs = new HashMap<String, Integer>();
-    public static void find(String pathName,int depth) throws IOException{  
+    public static Map<String, ArrayList<Integer>> term_docs = new HashMap<String, ArrayList<Integer>>();
+    public static ArrayList<String> fileNames = new ArrayList<String>();
+    public static void writeMatrix(String pathName,int depth) throws IOException{  
         int filecount=0;  
         //获取pathName的File对象  
         File dirFile = new File(pathName);  
@@ -50,15 +53,18 @@ public class ReadDocs {
             //如果是一个目录，搜索深度depth++，输出目录名后，进行递归  
             if (file.isDirectory()) {  
                 //递归  
-                find(file.getCanonicalPath(),currentDepth);  
+                writeMatrix(file.getCanonicalPath(),currentDepth);  
             }else{  
                 //如果是文件，则直接输出文件名              	
-                for (int j = 0; j < currentDepth; j++) {  
-                    //System.out.print("   ");  
-                }  
-                //System.out.print("|--");  
-                //System.out.println(name);  
-            	readFile(file);
+                if ((filecount+1) % 200 == 0) {
+                	for (int j = 0; j < currentDepth; j++) {  
+                        System.out.print("   ");  
+                    }  
+                    System.out.print("|--");  
+                    System.out.println(name);  
+                }
+            	readFile(file, filecount);
+            	fileNames.add(name);
                 filecount++;
             }  
         }  
@@ -66,34 +72,46 @@ public class ReadDocs {
         System.out.println("termcount:"+term_docs.size());
     }  
     
-    static void readFile(File file) {
+    static void readFile(File file, int index) {
     	try {
-    			InputStreamReader isr = new InputStreamReader(new FileInputStream(file), "GBK");
-    			BufferedReader br = new BufferedReader(isr);
-                String temp = null;
-                while ((temp = br.readLine()) != null) {
-                    String[] strs = temp.split(" ");
-                    for (int i = 0; i < strs.length; i++) {
-                    	if (strs[i].length() >= 1 && strs[i].indexOf(0) != ' ') {
-                    		if (!term_docs.containsKey(strs[i])) {
-                    			term_docs.put(strs[i], 1);
-                    		}
-                    	}
-                    }
+    		InputStreamReader isr = new InputStreamReader(new FileInputStream(file), "GBK");
+			BufferedReader br = new BufferedReader(isr);
+            String temp = null;
+            while ((temp = br.readLine()) != null) {
+                String[] strs = temp.split(" ");
+                for (int i = 0; i < strs.length; i++) {
+                	if (strs[i].length() >= 1 && strs[i].indexOf(0) != ' ') {
+                		if (!term_docs.containsKey(strs[i])) {
+                			ArrayList<Integer> ar1 = new ArrayList<Integer>();
+                			for (int j = 0; j < ReadDocs.docsNum; j++) {
+                				ar1.add(0);
+                			}
+                			term_docs.put(strs[i], ar1);
+                			term_docs.get(strs[i]).set(index, 1);
+                		} else {
+                			int num = term_docs.get(strs[i]).get(index)+1;
+                			term_docs.get(strs[i]).set(index, num);
+                		}
+                	}
                 }
+            }	
     	} catch (IOException e){
     		System.out.println("something wrong when IO!");
     	}
     }
-	public static void main(String[] args) {
-		//find("D:/学习/大三上/信息检索/HW3/PKU_corpus",0);
+    
+    // 写入映射到文件中，格式：termNum;term;docsNum,docs
+    public static void writeMap(String path) { 
+    	
+    }
+	public static void main(String[] args) throws IOException {
+		writeMatrix("D:/学习/大三上/信息检索/HW3/PKU_corpus",0);
 		// create M-by-N matrix that doesn't have full rank  
-	      int M = 8, N = 5;  
+	    /*  int M = 8, N = 5;  
 	      Matrix B = Matrix.random(5, 3);  
 	      Matrix A = Matrix.random(M, N).times(B).times(B.transpose());  
 	      System.out.print("A = ");  
-	      A.print(9, 6);  
-	  
+	      A.print(9, 6); 
 	      // compute the singular vallue decomposition  
 	      System.out.println("A = U S V^T");  
 	      System.out.println();  
@@ -114,6 +132,6 @@ public class ReadDocs {
 	      // print out singular values  
 	      System.out.print("singular values = ");  
 	      Matrix svalues = new Matrix(s.getSingularValues(), 1);  
-	      svalues.print(9, 6);   
+	      svalues.print(9, 6);   */
 	}
 }
