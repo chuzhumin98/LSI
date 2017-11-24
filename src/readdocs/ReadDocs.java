@@ -123,6 +123,8 @@ public class ReadDocs {
     
     public static void writeMatrix(String path) {
     	try (PrintStream out = new PrintStream(new File(path))) {
+    		out.println(ReadDocs.term_docs.size());
+    		out.println(ReadDocs.docsNum);
         	for (Map.Entry<String, ArrayList<Integer>> entry : term_docs.entrySet()) {
         		ArrayList<Integer> al1 = entry.getValue();
         		out.println(al1.toString());
