@@ -26,6 +26,8 @@ public class DoSVD {
 			array = new double [this.rowNum][this.columnNum];
 			String tmp1 = input.nextLine();
 			double max = 0;
+			int maxRow = -1;
+			int maxColumn = -1;
 			int count = 0;
 			for (int i = 0; i < this.rowNum; i++) {
 				String tmp = input.nextLine();
@@ -34,6 +36,8 @@ public class DoSVD {
 					array[i][j] = js.getInt(j);
 					if (max < array[i][j]) {
 						max = array[i][j];
+						maxRow = i;
+						maxColumn = j;
 					}
 					if (array[i][j] > 0) {
 						count++;
@@ -45,6 +49,7 @@ public class DoSVD {
 				//System.out.println(js.size()+":"+js);
 			}
 			System.out.println("max:"+max);
+			System.out.println("row:"+maxRow+"  column:"+maxColumn);
 			System.out.println("count:"+count);
 			this.term_docsMatrix = new Matrix(this.array);	
 			System.out.println(this.term_docsMatrix.get(18942, 0));
