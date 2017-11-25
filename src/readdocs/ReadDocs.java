@@ -18,7 +18,7 @@ import Jama.Matrix;
 import Jama.SingularValueDecomposition;;
 
 public class ReadDocs {
-	final static int docsNum = 3148;
+	final static int docsNum = 500;
     private static int depth=1;  
     public static Map<String, ArrayList<Integer>> term_docs = new HashMap<String, ArrayList<Integer>>();
     public static ArrayList<String> fileNames = new ArrayList<String>();
@@ -69,6 +69,9 @@ public class ReadDocs {
             	readFile(file, filecount);
             	fileNames.add(name);
                 filecount++;
+                if (filecount == ReadDocs.docsNum) {
+                	return;
+                }
             }  
         }  
         System.out.println("filecount:"+filecount);
@@ -136,14 +139,15 @@ public class ReadDocs {
     }
 	public static void main(String[] args) throws IOException {
 		writeMatrix("D:/学习/大三上/信息检索/HW3/PKU_corpus",0);
-		writeMap("ext/map.txt");
-		writeMatrix("ext/matrix.txt");
+		writeMap("ext/mapSmall.txt");
+		writeMatrix("ext/matrixSmall.txt");
 		// create M-by-N matrix that doesn't have full rank  
-	    /*  int M = 8, N = 5;  
+	   /*   int M = 8, N = 5;  
 	      Matrix B = Matrix.random(5, 3);  
 	      Matrix A = Matrix.random(M, N).times(B).times(B.transpose());  
 	      System.out.print("A = ");  
-	      A.print(9, 6); 
+	      System.out.println(A.get(0, 0));
+	      A.print(A.getRowDimension(), A.getColumnDimension()); 
 	      // compute the singular vallue decomposition  
 	      System.out.println("A = U S V^T");  
 	      System.out.println();  
@@ -164,6 +168,6 @@ public class ReadDocs {
 	      // print out singular values  
 	      System.out.print("singular values = ");  
 	      Matrix svalues = new Matrix(s.getSingularValues(), 1);  
-	      svalues.print(9, 6);   */
+	      svalues.print(9, 6);    */
 	}
 }
