@@ -1,7 +1,10 @@
 package readdocs;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.PrintStream;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 import Jama.Matrix;
@@ -15,6 +18,7 @@ public class Analysis {
 	double[] S;
 	double[][] Sm;
 	Matrix Us, Vs, Ss, ans;
+	ArrayList<ArrayList<Double>> resultPath = new ArrayList<ArrayList<Double>>();
 	
 	void loadModel() {
 		try {
@@ -79,23 +83,54 @@ public class Analysis {
 		ans = Us.times(Ss).times(Vs);
 		System.out.println("end calulate matrix");
 	}
-	void getChangePath(int term, int docs, String path) {
+	void getChangePath(int term, int docs) {
 		
 		//System.out.println(ans.get(term, docs));
 		double sums = 0.0;
-		System.out.println(path);
+		ArrayList<Double> result = new ArrayList<Double>();
 		for (int i = 0; i < Sm.length; i++) {
 			sums += U[term][i] * Sm[i][i] * V[docs][i];
-			System.out.println(i+":"+sums);
+			result.add(sums);
+			//System.out.println(i+":"+sums);
 		}
-		//System.out.println(sums);
+		this.resultPath.add(result);
+		System.out.println(sums);
 		
+	}
+	
+	void saveResultPath(String path) {
+		try {
+			PrintStream out = new PrintStream(new File(path));
+			if (this.resultPath.size() == 0) return;
+			for (int i = 0; i < Sm.length; i++) {
+				for (int j = 0; j < this.resultPath.size(); j++) {
+					if (j != this.resultPath.size()-1) {
+						out.print(this.resultPath.get(j).get(i)+" ");
+					} else {
+						out.println(this.resultPath.get(j).get(i));
+					}
+				}
+			}
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	public static void main(String[] args) {
 		Analysis an1 = new Analysis();
 		an1.loadModel();
 		//an1.getMatrix();
-		an1.getChangePath(18942, 0, "中国-1");
-		an1.getChangePath(17339, 0, "一九九七年-1");
+		boolean isZero = true;
+		if (isZero) {
+			an1.getChangePath(17335, 0); //蝴蝶/n-1
+			an1.getChangePath(10345, 1); //早已/d-2
+			an1.saveResultPath("model/result2.txt");
+		} else {
+			an1.getChangePath(18942, 0); //中国/ns-1
+			an1.getChangePath(17339, 0); //一九九七年/t-1
+			an1.saveResultPath("model/result1.txt");
+		}
+		
+		
 	}
 }
