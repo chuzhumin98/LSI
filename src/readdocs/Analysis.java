@@ -125,8 +125,8 @@ public class Analysis {
 		try {
 			PrintStream out = new PrintStream(new File(pathTerm));
 			for (int i = 0; i < this.U.length; i++) {
-				for (int  j = 0; j <= k-1; j++) {
-					if (j != k-1) {
+				for (int  j = 1; j <= k; j++) {
+					if (j != k) {
 						out.print(this.U[i][j]+" ");
 					} else {
 						out.println(this.U[i][j]);
@@ -155,7 +155,7 @@ public class Analysis {
 	}
 	 //记录与dim2和3(x,y)距离小于dist的所有词汇
 	void getMostSim(double x, double y, double dist) throws FileNotFoundException {
-		PrintStream out = new PrintStream(new File("result/mostSimTerm"));
+		PrintStream out = new PrintStream(new File("result/mostSimTerm_0"));
 		for (int i = 0; i < this.U.length; i++) {
 			double myDist = Math.abs(U[i][1]-x)+Math.abs(U[i][2]-y);
 			if (myDist < dist) {
@@ -163,7 +163,7 @@ public class Analysis {
 				out.println(this.termSet.get(i));
 			}
 		}
-		PrintStream out2 = new PrintStream(new File("result/mostSimDocs"));
+		PrintStream out2 = new PrintStream(new File("result/mostSimDocs_0"));
 		for (int i = 0; i < this.V.length; i++) {
 			double myDist = Math.abs(V[i][1]-x)+Math.abs(V[i][2]-y);
 			if (myDist < 4*dist) {
@@ -201,7 +201,8 @@ public class Analysis {
 		Analysis an1 = new Analysis();
 		an1.loadTermDocs("ext/mapSmall.txt");
 		an1.loadModel();
-		an1.getMostSim(0.00225, -0.003, 0.001);
+		//an1.getMostSim(0.00225, -0.003, 0.001);
+		//an1.getMostSim(0.0, 0.0, 0.000005);
 		//an1.getMatrix();
 		/*boolean isZero = true;
 		if (isZero) {
@@ -213,7 +214,7 @@ public class Analysis {
 			an1.getChangePath(17339, 0); //一九九七年/t-1
 			an1.saveResultPath("model/result1.txt");
 		} */
-		//an1.writeTerm_Docs(2, "model/Term2'.txt", "model/Doc2'.txt");
+		an1.writeTerm_Docs(3, "model/Term3.txt", "model/Doc3.txt");
 		
 	}
 }
