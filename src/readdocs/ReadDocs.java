@@ -138,15 +138,15 @@ public class ReadDocs {
         }
     }
 	public static void main(String[] args) throws IOException {
-		writeMatrix("D:/学习/大三上/信息检索/HW3/PKU_corpus",0);
-		writeMap("ext/mapSmall.txt");
-		writeMatrix("ext/matrixSmall.txt");
+		//writeMatrix("D:/学习/大三上/信息检索/HW3/PKU_corpus",0);
+		//writeMap("ext/mapSmall.txt");
+		//writeMatrix("ext/matrixSmall.txt");
 		// create M-by-N matrix that doesn't have full rank  
-	   /*   int M = 8, N = 5;  
+	      int M = 8, N = 5;  
 	      Matrix B = Matrix.random(5, 3);  
 	      Matrix A = Matrix.random(M, N).times(B).times(B.transpose());  
 	      System.out.print("A = ");  
-	      System.out.println(A.get(0, 0));
+	      System.out.println(A.get(0, 1));
 	      A.print(A.getRowDimension(), A.getColumnDimension()); 
 	      // compute the singular vallue decomposition  
 	      System.out.println("A = U S V^T");  
@@ -161,6 +161,8 @@ public class ReadDocs {
 	      System.out.print("V = ");  
 	      Matrix V = s.getV();  
 	      V.print(9, 6);  
+	      Matrix Ap = U.times(S).times(V.transpose());
+	      Ap.print(9, 9);
 	      System.out.println("rank = " + s.rank());  
 	      System.out.println("condition number = " + s.cond());  
 	      System.out.println("2-norm = " + s.norm2());  
@@ -168,6 +170,6 @@ public class ReadDocs {
 	      // print out singular values  
 	      System.out.print("singular values = ");  
 	      Matrix svalues = new Matrix(s.getSingularValues(), 1);  
-	      svalues.print(9, 6);    */
+	      svalues.print(9, 6);    
 	}
 }

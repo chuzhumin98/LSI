@@ -46,7 +46,9 @@ public class DoSVD {
 			}
 			System.out.println("max:"+max);
 			System.out.println("count:"+count);
-			this.term_docsMatrix = new Matrix(this.array);		
+			this.term_docsMatrix = new Matrix(this.array);	
+			System.out.println(this.term_docsMatrix.get(18942, 0));
+			System.out.println(this.term_docsMatrix.get(17339, 0));
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -54,20 +56,34 @@ public class DoSVD {
 	}
 	
 	void saveSVDModel() {
-		this.array = null;
+		//this.array = null;
 		long start = System.currentTimeMillis() ;
 		SingularValueDecomposition s = this.term_docsMatrix.svd();
         System.out.println("use time "+(System.currentTimeMillis()-start));
-		
+        Matrix S = s.getS();
+        Matrix U = s.getU();
+        Matrix V = s.getV();
+        Matrix Ap = U.times(S).times(V.transpose());
+        double error = 0.0;
+        for (int i = 0; i < Ap.getRowDimension(); i++) {
+        	for (int j = 0; j < Ap.getColumnDimension(); j++) {
+        		error += Math.abs(this.term_docsMatrix.get(i, j)-Ap.get(i, j));
+        	}
+        }
+        System.out.println("error:"+error);
 		try {
-			Matrix S = s.getS();
+			
 			for (int i = 0; i < S.getRowDimension(); i++) {
 				System.out.println(i+":"+S.get(i, i));
 			}
-			PrintStream out = new PrintStream(new File("model/S1.txt"));
+			PrintStream out = new PrintStream(new File("model/S.txt"));
         	out.println(S.getRowDimension());
+        	out.println(S.getColumnDimension());
         	for (int i = 0; i < S.getRowDimension(); i++) {
-        		out.println(S.get(i, i));
+        		for (int j = 0; j < S.getColumnDimension(); j++) {
+        			out.print(S.get(i, j)+" ");
+        		}
+        		out.println();
         	}
         	
         } catch (IOException e) {
@@ -75,8 +91,7 @@ public class DoSVD {
             e.printStackTrace();
         }
 		try {
-			Matrix U = s.getU();
-			PrintStream out = new PrintStream(new File("model/U1.txt"));
+			PrintStream out = new PrintStream(new File("model/U.txt"));
         	out.println(U.getRowDimension());
         	out.println(U.getColumnDimension());
         	for (int i = 0; i < U.getRowDimension(); i++) {
@@ -90,8 +105,8 @@ public class DoSVD {
             e.printStackTrace();
         }
 		try {
-			Matrix V = s.getV();
-			PrintStream out = new PrintStream(new File("model/V1.txt"));
+			
+			PrintStream out = new PrintStream(new File("model/V.txt"));
         	out.println(V.getRowDimension());
         	out.println(V.getColumnDimension());
         	for (int i = 0; i < V.getRowDimension(); i++) {
